@@ -125,7 +125,7 @@ export const certifications: Certification[] = [
     name: "App Development with Swift",
     issuer: "Apple",
     year: "2025",
-    url: "/certificates/apple-app-development-with-swift.pdf",
+    url: `${import.meta.env.BASE_URL}certificates/apple-app-development-with-swift.pdf`,
   },
   { name: "Good Clinical Practice", issuer: "NIDA Clinical Trials Network", year: "2025" },
   { name: "Research Ethics: Informed Consent", issuer: "TRREE", year: "2025" },
