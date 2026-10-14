@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@theme {
+  /* Warm, faded print palette — mid-tones, nothing pure black or white */
+  --color-paper: #e5d4b5;
+  --color-paper-deep: #d9c29b;
+  --color-cream: #f2e7d0;
+  --color-ink: #2e2219;
+  --color-ink-soft: #64503d;
+  --color-rust: #a8461f;
+  --color-rust-light: #c4643a;
+  --color-mustard: #d9a034;
+  --color-pine: #3b5e54;
+  --color-pine-deep: #2f4c44;
+  --color-wine: #6e3437;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat", "Comic Sans MS", cursive;
+
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-rise: rise 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes rise {
+    from { transform: translateY(18%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--color-mustard);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px dashed currentColor;
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  /* Soft, slightly wonky serif for headlines */
+  .display {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    letter-spacing: -0.02em;
+  }
+
+  /* Hero letters: soak in like ink, thicken under the pointer (Fraunces is a variable font) */
+  .ink-letter {
+    display: inline-block;
+    font-weight: 600;
+    transition:
+      font-weight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: ink-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    animation-delay: calc(var(--i) * 70ms + 120ms);
+  }
+  @media (hover: hover) {
+    .ink-letter:hover {
+      font-weight: 900;
+      transform: translateY(-0.05em) rotate(-3deg);
+    }
+    .ink-letter:hover + .ink-letter,
+    .ink-letter:has(+ .ink-letter:hover) {
+      font-weight: 760;
+    }
+  }
+  @keyframes ink-in {
+    from {
+      font-weight: 300;
+      transform: translateY(0.05em);
+    }
+  }
+
+  /* Paper grain over everything */
+  .grain {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    opacity: 0.22;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .halftone {
+    background-image: radial-gradient(currentColor 1.1px, transparent 1.4px);
+    background-size: 7px 7px;
+  }
+
+  /* Printed-object look: ink outline + hard offset shadow */
+  .print {
+    border: 2px solid var(--color-ink);
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    padding: 0.8rem 1.4rem;
+    font-weight: 600;
+    box-shadow: 4px 4px 0 var(--color-ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
+  .btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--color-ink);
+  }
+
+  /* Hand-drawn squiggle underline on hover */
+  .squiggle {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q 6 0 12 3 T 24 3' fill='none' stroke='%23a8461f' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: 0 100%;
+    background-size: 0 6px;
+    padding-bottom: 4px;
+    transition: background-size 0.35s ease;
+  }
+  .squiggle:hover,
+  .squiggle:focus-visible {
+    background-size: 24px 6px;
+  }
+
+  .rule-double {
+    border-top: 2px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
+    height: 5px;
+  }
+
+  /* Ticket stub with punched notches on both sides */
+  .ticket {
+    --notch: 12px;
+    mask:
+      radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
